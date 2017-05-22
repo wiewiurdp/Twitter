@@ -1,26 +1,18 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: mateusz
- * Date: 09.05.17
- * Time: 00:55
- */
-class Tweet
+class Comment
 {
     private $id;
-    private $userId;
+    private $tweetId;
     private $text;
     private $creationDate;
+    private $userId;
 
     public function __construct()
     {
         $this->id = -1;
     }
 
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
@@ -37,17 +29,17 @@ class Tweet
     /**
      * @return mixed
      */
-    public function getUserId()
+    public function getTweetId()
     {
-        return $this->userId;
+        return $this->tweetId;
     }
 
     /**
-     * @param mixed $userId
+     * @param mixed $tweetId
      */
-    public function setUserId($userId)
+    public function setTweetId($tweetId)
     {
-        $this->userId = $userId;
+        $this->tweetId = $tweetId;
     }
 
     /**
@@ -82,19 +74,37 @@ class Tweet
         $this->creationDate = $creationDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param mixed $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+
     public function save(PDO $connection)
     {
         if ($this->id == -1) {
             // przygotowanie zapytania
-            $sql = "INSERT INTO Tweet(userId, text, creationDate) VALUES (:userId, :text, :creationDate)";
+            $sql = "INSERT INTO Comment(tweetId, creationDate, text, userId) VALUES (:tweetId, :creationDate, :text, :userId)";
 
             $prepare = $connection->prepare($sql);
             // Wysłanie zapytania do bazy z kluczami i wartościami do podmienienia
             $result = $prepare->execute(
                 [
-                    'userId' => $this->userId,
-                    'text' => $this->text,
+                    'tweetId' => $this->tweetId,
                     'creationDate' => $this->creationDate,
+                    'text' => $this->text,
+                    'userId' => $this->userId,
                 ]
             );
 
@@ -103,9 +113,17 @@ class Tweet
 
             return (bool)$result;
         } else {
-            $sql = "UPDATE Tweet SET userId=:userId, text=:text, creationDate=:creationDate WHERE id=:id";
+            $sql = "UPDATE Comment SET tweetId=:tweetId, creationDate=:creationDate, text=:text, userId=:userId WHERE id=:id";
             $stmt = $connection->prepare($sql);
-            $result = $stmt->execute(['id' => $this->id, 'userId' => $this->userId, 'text' => $this->text, 'creationDate' => $this->creationDate]);
+            $result = $stmt->execute(
+                [
+                    'id' => $this->id,
+                    'tweetId' => $this->tweetId,
+                    'creationDate' => $this->creationDate,
+                    'text' => $this->text,
+                    'userId' => $this->userId
+                ]
+            );
             if ($result === true) {
                 return true;
             }
@@ -113,11 +131,10 @@ class Tweet
         return false;
     }
 
-
     public function delete(PDO $connection)
     {
         if ($this->id != -1) {
-            $sql = "DELETE FROM Tweet WHERE id=:id";
+            $sql = "DELETE FROM Comment WHERE id=:id";
             $stmt = $connection->prepare($sql);
             $result = $stmt->execute(['id' => $this->id]);
 
@@ -130,68 +147,48 @@ class Tweet
         }
         return true;
     }
-    static public function loadTweetById(PDO $connection, $id)
+
+    static public function loadCommentById(PDO $connection, $id)
     {
-        $sql = "SELECT * FROM Tweet WHERE id=:id";
+        $sql = "SELECT * FROM Comment WHERE id=:id";
         $stmt = $connection->prepare($sql);
         $result = $stmt->execute(['id' => $id]);
 
         if ($result === true && $stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $loadTweet = new Tweet();
-            $loadTweet->id = $row['id'];
-            $loadTweet->userId = $row['userId'];
-            $loadTweet->text = $row['text'];
-            $loadTweet->creationDate = $row['creationDate'];
+            $loadComment = new Comment();
+            $loadComment->id = $row['id'];
+            $loadComment->tweetId = $row['tweetId'];
+            $loadComment->text = $row['text'];
+            $loadComment->creationDate = $row['creationDate'];
+            $loadComment->userId = $row['userId'];
 
-            return $loadTweet;
+            return $loadComment;
         }
         return null;
     }
 
-    static public function showAllTweetsByUserId(PDO $connection, $userId)
+    static public function loadAllCommentsByTweetId(PDO $connection, $tweetId)
     {
-        $sql = "SELECT * FROM Tweet WHERE userId=:userId";
+        $sql = "SELECT * FROM Comment WHERE tweetId=:tweetId";
         $ret = [];
         $stmt = $connection->prepare($sql);
-        $stmt->execute(['userId' => $userId]);
+        $stmt->execute(['tweetId' => $tweetId]);
 
         if ($stmt == true && $stmt->rowCount() > 0) {
             foreach ($stmt as $row) {
 
-                $loadTweet = new Tweet();
-                $loadTweet->id = $row['id'];
-                $loadTweet->userId = $row['userId'];
-                $loadTweet->text = $row['text'];
-                $loadTweet->creationDate = $row['creationDate'];
-                $ret[] = $loadTweet;
-
+                $loadComment = new Comment();
+                $loadComment->id = $row['id'];
+                $loadComment->tweetId = $row['tweetId'];
+                $loadComment->text = $row['text'];
+                $loadComment->creationDate = $row['creationDate'];
+                $loadComment->userId = $row['userId'];
+                $ret[] = $loadComment;
             }
-
         }
         return $ret;
     }
-    static public function showAllTweets(PDO $connection)
-    {
-        $sql = "SELECT * FROM Tweet";
-        $ret = [];
-        $stmt = $connection->query($sql);
-
-        if ($stmt == true && $stmt->rowCount() > 0) {
-            foreach ($stmt as $row) {
-
-                $loadTweet = new Tweet();
-                $loadTweet->id = $row['id'];
-                $loadTweet->userId = $row['userId'];
-                $loadTweet->text = $row['text'];
-                $loadTweet->creationDate = $row['creationDate'];
-                $ret[] = $loadTweet;
-
-            }
-
-        }
-        return $ret;
-    }
-
 }
+

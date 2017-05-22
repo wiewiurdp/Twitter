@@ -1,5 +1,5 @@
 <?php
 // public/bootstrap.php
 session_start();
-include_once 'autoload.php';
-include_once 'connection.php';
+include_once __DIR__.'/autoload.php';
+include_once __DIR__.'/connection.php';

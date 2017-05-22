@@ -1,15 +1,51 @@
 <?php
 // public/admin/addUser.php
-include_once '../bootstrap.php';
+include_once __DIR__ . '/../bootstrap.php';
+if (!($_SERVER["REQUEST_METHOD"] === "POST")) {
 
-if (!isset($_SESSION['logged']) || $_SESSION['logged'] != true) {
-    die('użytkownik musi być zalogowany');
+} else {
+    if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password']) & isset($_POST['passwordCheck'])) {
+        if ($_POST['password'] === $_POST['passwordCheck']) {
+            $email = $_POST['email'];
+            $emailCheck = User::showUserByEmail($connection, $email);
+            if ($emailCheck) {
+                echo 'Istnieje już użytkownik o podanym emailu.';
+            } else {
+                $user = new User();
+                $user->setEmail($_POST['email']);
+                $user->setUsername($_POST['username']);
+                $user->setHashPassword($_POST['password']);
+                $result = $user->save($connection);
+                die ('
+        Użytkownik został dodany<br>
+        <a href=login.php>Przejdz do logowania</a>
+        ');
+            }
+        } else {
+            echo 'Wprowadzone hasła powinny być identyczne';
+        }
+    } else {
+        echo 'Zle dane';
+    }
 }
+?>
 
-$user = new User();
-$user->setEmail('tt@tt.pl');
-$user->setUsername('test');
-$user->setHashPassword('password');
+<html>
+<body>
+<h1>Stwórz nowego użytkownika</h1>
+<form method="post">
+    Nazwa użytkownika: <br><input name="username">
+    <br>
+    Email: <br><input name="email" type="email">
+    <br>
+    Hasło: <br><input name="password" type="password">
+    <br>
+    Powtórzone haslo <br><input name="passwordCheck" type="password">
+    <br>
+    <br>
+    <button type="submit">Rejestruj</button>
+    <br>
 
-$result = $user->save($connection);
-echo 'Mamy usera';
+</form>
+</body>
+</html>
