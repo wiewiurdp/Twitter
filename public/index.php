@@ -6,6 +6,11 @@ if (isset($_SESSION['logged']) && isset($_SESSION['email']) && $_SESSION['logged
 } else {
     header('Location:admin/login.php');
 };
+$newMessages = null;
+$messages = Message::loadUnreadMessagesByReceiverId($connection, $_SESSION['id']);
+if (count($messages)>0) {
+    $newMessages = "(".count($messages).")";
+}
 ?>
     <!doctype html>
     <html lang="en">
@@ -25,7 +30,7 @@ if (isset($_SESSION['logged']) && isset($_SESSION['email']) && $_SESSION['logged
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" style="margin-top:30px;">
                 <a class="btn btn-warning" href="index.php?menu=index" role="button">Strona główna</a>
                 <a class="btn btn-info" href="index.php?menu=users" role="button">Użytkownicy</a>
-                <a class="btn btn-info" href="index.php?menu=messages" role="button">Wiadomości</a>
+                <a class="btn btn-info" href="index.php?menu=messages" role="button">Wiadomości<?php echo $newMessages;?></a>
                 <a class="btn btn-info" href="index.php?menu=myProfile" role="button">Profil</a>
                 <a class="btn btn-info" href="admin/logout.php" role="button">Wyloguj się</a>
             </div>
@@ -47,7 +52,7 @@ if (isset($_GET['menu'])) {
 
             break;
         case 'myProfile':
-
+            include_once 'admin/myProfile.php';
             break;
         case 'tweet':
             include_once 'admin/editTweet.php';
@@ -56,6 +61,4 @@ if (isset($_GET['menu'])) {
             include_once 'admin/editComment.php';
             break;
     }
-} else {
-
 }

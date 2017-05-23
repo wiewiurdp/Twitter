@@ -172,7 +172,7 @@ class Tweet
         }
         return $ret;
     }
-    static public function showAllTweets(PDO $connection)
+    static public function loadAllTweets(PDO $connection)
     {
         $sql = "SELECT * FROM Tweet";
         $ret = [];

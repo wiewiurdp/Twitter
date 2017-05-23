@@ -4,7 +4,7 @@ include_once __DIR__ . '/../bootstrap.php';
 
 echo '<h1>Wszystkie tweety</h1>';
 
-$tweets = Tweet::showAllTweets($connection);
+$tweets = Tweet::loadAllTweets($connection);
 usort($tweets, 'descCreationDateSorter');
 for ($i = 0; $i < count($tweets); $i++) {
     $tweetUserId = $tweets[$i]->getUserId();

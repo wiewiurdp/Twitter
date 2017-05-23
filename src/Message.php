@@ -11,6 +11,7 @@ class Message
     private $id;
     private $senderId;
     private $receiverId;
+    private $topic;
     private $text;
     private $creationDate;
     private $readCheck;
@@ -71,6 +72,22 @@ class Message
     /**
      * @return mixed
      */
+    public function getTopic()
+    {
+        return $this->topic;
+    }
+
+    /**
+     * @param mixed $topic
+     */
+    public function setTopic($topic)
+    {
+        $this->topic = $topic;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getText()
     {
         return $this->text;
@@ -121,7 +138,7 @@ class Message
     {
         if ($this->id == -1) {
             // przygotowanie zapytania
-            $sql = "INSERT INTO Message(senderId,receiverId, text, creationDate, readCheck ) VALUES (:senderId, :receiverId, :text, :creationDate, :readCheck)";
+            $sql = "INSERT INTO Message(senderId,receiverId, topic, text, creationDate, readCheck ) VALUES (:senderId, :receiverId, :topic, :text, :creationDate, :readCheck)";
 
             $prepare = $connection->prepare($sql);
             // Wysłanie zapytania do bazy z kluczami i wartościami do podmienienia
@@ -129,6 +146,7 @@ class Message
                 [
                     'senderId' => $this->senderId,
                     'receiverId' => $this->receiverId,
+                    'topic' => $this->topic,
                     'text' => $this->text,
                     'creationDate' => $this->creationDate,
                     'readCheck' => $this->readCheck,
@@ -140,15 +158,16 @@ class Message
 
             return (bool)$result;
         } else {
-            $sql = "UPDATE Message SET senderId=:senderId, receiverId=:receiverId,  text=:text, creationDate=:creationDate, readCheck=:readCheck WHERE id=:id";
+            $sql = "UPDATE Message SET senderId=:senderId, receiverId=:receiverId, topic=:topic,  text=:text, creationDate=:creationDate, readCheck=:readCheck WHERE id=:id";
             $stmt = $connection->prepare($sql);
-            $result = $stmt->execute(['id' => $this->id, 'senderId' => $this->senderId,  'receiverId' => $this->receiverId, 'text' => $this->text, 'creationDate' => $this->creationDate, 'readCheck'=>$this->readCheck ]);
+            $result = $stmt->execute(['id' => $this->id, 'senderId' => $this->senderId, 'receiverId' => $this->receiverId, 'topic' => $this->topic, 'text' => $this->text, 'creationDate' => $this->creationDate, 'readCheck' => $this->readCheck]);
             if ($result === true) {
                 return true;
             }
         }
         return false;
     }
+
     public function delete(PDO $connection)
     {
         if ($this->id != -1) {
@@ -178,14 +197,115 @@ class Message
             $loadMessage = new Message();
             $loadMessage->id = $row['id'];
             $loadMessage->senderId = $row['senderId'];
-            $loadMessage->text = $row['text'];
             $loadMessage->receiverId = $row['receiverId'];
+            $loadMessage->topic = $row['topic'];
+            $loadMessage->text = $row['text'];
             $loadMessage->creationDate = $row['creationDate'];
-            $loadMessage->readCheck= $row['readCheck'];
+            $loadMessage->readCheck = $row['readCheck'];
 
             return $loadMessage;
         }
         return null;
     }
 
+    static public function loadUnreadMessagesByReceiverId(PDO $connection, $receiverId)
+    {
+        $sql = "SELECT * FROM Message WHERE receiverId=:receiverId AND readCheck=1";
+        $ret = [];
+        $stmt = $connection->prepare($sql);
+        $stmt->execute(['receiverId' => $receiverId]);
+
+        if ($stmt == true && $stmt->rowCount() > 0) {
+            foreach ($stmt as $row) {
+
+                $loadMessage = new Message();
+                $loadMessage->id = $row['id'];
+                $loadMessage->senderId = $row['senderId'];
+                $loadMessage->receiverId = $row['receiverId'];
+                $loadMessage->topic = $row['topic'];
+                $loadMessage->text = $row['text'];
+                $loadMessage->creationDate = $row['creationDate'];
+                $loadMessage->readCheck = $row['readCheck'];
+                $ret[] = $loadMessage;
+
+            }
+
+        }
+        return $ret;
+    }
+    static public function loadReadMessagesByReceiverId(PDO $connection, $receiverId)
+    {
+        $sql = "SELECT * FROM Message WHERE receiverId=:receiverId AND readCheck=0";
+        $ret = [];
+        $stmt = $connection->prepare($sql);
+        $stmt->execute(['receiverId' => $receiverId]);
+
+        if ($stmt == true && $stmt->rowCount() > 0) {
+            foreach ($stmt as $row) {
+
+                $loadMessage = new Message();
+                $loadMessage->id = $row['id'];
+                $loadMessage->senderId = $row['senderId'];
+                $loadMessage->receiverId = $row['receiverId'];
+                $loadMessage->topic = $row['topic'];
+                $loadMessage->text = $row['text'];
+                $loadMessage->creationDate = $row['creationDate'];
+                $loadMessage->readCheck = $row['readCheck'];
+                $ret[] = $loadMessage;
+
+            }
+
+        }
+        return $ret;
+    }
+    static public function loadMessagesBySenderId(PDO $connection, $senderId)
+    {
+        $sql = "SELECT * FROM Message WHERE senderId=:senderId";
+        $ret = [];
+        $stmt = $connection->prepare($sql);
+        $stmt->execute(['senderId' => $senderId]);
+
+        if ($stmt == true && $stmt->rowCount() > 0) {
+            foreach ($stmt as $row) {
+
+                $loadMessage = new Message();
+                $loadMessage->id = $row['id'];
+                $loadMessage->senderId = $row['senderId'];
+                $loadMessage->receiverId = $row['receiverId'];
+                $loadMessage->topic = $row['topic'];
+                $loadMessage->text = $row['text'];
+                $loadMessage->creationDate = $row['creationDate'];
+                $loadMessage->readCheck = $row['readCheck'];
+                $ret[] = $loadMessage;
+
+            }
+
+        }
+        return $ret;
+    }
+    static public function loadAllMessages(PDO $connection)
+    {
+        $sql = "SELECT * FROM Message";
+        $ret = [];
+        $stmt = $connection->query($sql);
+
+        if ($stmt == true && $stmt->rowCount() > 0) {
+            foreach ($stmt as $row) {
+
+                $loadMessage = new Message();
+                $loadMessage->id = $row['id'];
+                $loadMessage->senderId = $row['senderId'];
+                $loadMessage->receiverId = $row['receiverId'];
+                $loadMessage->topic = $row['topic'];
+                $loadMessage->text = $row['text'];
+                $loadMessage->creationDate = $row['creationDate'];
+                $loadMessage->readCheck = $row['readCheck'];
+                $ret[] = $loadMessage;
+
+
+            }
+
+        }
+        return $ret;
+    }
 }

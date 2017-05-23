@@ -4,16 +4,17 @@ include_once __DIR__ . '/../bootstrap.php';
 $allUsers = User::loadAllUser($connection);
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
     $user = User::loadUserById($connection, $_POST['id']);
-$username = $user->getUsername();
+    $username = $user->getUsername();
     $tweets = Tweet::showAllTweetsByUserId($connection, $_POST['id']);
     usort($tweets, 'descCreationDateSorter');
     echo '
 <h1> Wszystkie tweety użytkownika <br><br>'
-        .$username.'<br><br></h1>';
+        . $username . '<br><br></h1>';
     for ($i = 0; $i < count($tweets); $i++) {
-        $text = $tweets[$i]->getText();
-        $creationDate = $tweets[$i]->getCreationDate();
-        echo('<br><h2>'.$text . "<br></h2><code>Data dodania:" . $creationDate . "</code><br>");
+        $tweetId = $tweets[$i]->getId();
+        $tweetText = $tweets[$i]->getText();
+        $tweetCreationDate = $tweets[$i]->getCreationDate();
+        echo "<b><h2><a href='/KRA_PHP_W_02_Podstawy_Programowania/Warsztaty2/public/index.php?menu=tweet&tweetId=" . $tweetId . "'></b><br>" . $tweetText . "</a><br></h2><code>Data dodania:" . $tweetCreationDate . "</code>";
 
         $tweetId = $tweets[$i]->getId();
         $comments = Comment::loadAllCommentsByTweetId($connection, $tweetId);
@@ -21,12 +22,15 @@ $username = $user->getUsername();
             usort($comments, 'ascCreationDateSorter');
             echo '<br><br>Komentarze: ';
             for ($j = 0; $j < count($comments); $j++) {
+                $commentId = $comments[$j]->getId();
                 $commentUserId = $comments[$j]->getUserId();
                 $commentUser = User::loadUserById($connection, $commentUserId);
                 $commentUsername = $commentUser->getUsername();
                 $commentText = $comments[$j]->getText();
                 $commentCreationDate = $comments[$j]->getCreationDate();
-                echo "<br><br><b>" . $commentUsername . "</b><br>" . $commentText . "<br>Data dodania:" . $commentCreationDate . "</code><br>";
+//                echo "<br><br><b>" . $commentUsername . "</b><br>" . $commentText . "<br>Data dodania:" . $commentCreationDate . "</code><br>";
+                echo "<br><br><b>" . $commentUsername . "<a href='/KRA_PHP_W_02_Podstawy_Programowania/Warsztaty2/public/index.php?menu=comment&commentId=" . $commentId . "'></b><br>" . $commentText . "</a><br><code>Data dodania:" . $commentCreationDate . "</code>";
+
             };
         };
     };
