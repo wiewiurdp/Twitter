@@ -1,10 +1,7 @@
 <?php
 // public/admin/login.php
+$loginCheck = 1;
 include_once __DIR__.'/../bootstrap.php';
-
-if (isset($_SESSION['logged']) && isset($_SESSION['email']) && $_SESSION['logged'] == true) {
-    die('Jesteś zalogowany jako '.$_SESSION['email']);
-}
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['reg'])){
     $email = $_POST['email'];
@@ -15,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['reg'])){
             $_SESSION['logged'] = true;
             $_SESSION['email'] = $user->getEmail();
             $_SESSION['id'] = $user->getId();
-            header("Location:../index.php");
+            header("Location:../index.php?menu=index");
         } else {
             $errors[] = 'Hasło niepoprawne';
         }
@@ -23,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['reg'])){
         $errors[] = 'Brak takiego użytkownika';
     }
 };
-//else {
-//    password_hash();
-//}
 ?>
 
 <html>

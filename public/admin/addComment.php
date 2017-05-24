@@ -1,5 +1,7 @@
 <?php
 
+include_once __DIR__ . '/../bootstrap.php';
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['tweetId']) && isset($_POST['commentText']) && $_POST['tweetId'] == $tweetId) {
     $newComment = new Comment();
     $newComment->setTweetId($_POST['tweetId']);

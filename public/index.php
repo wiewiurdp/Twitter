@@ -1,11 +1,7 @@
 <?php
 include_once 'bootstrap.php';
 
-if (isset($_SESSION['logged']) && isset($_SESSION['email']) && $_SESSION['logged'] == true) {
-    echo('Jesteś zalogowany jako ' . $_SESSION['email']);
-} else {
-    header('Location:admin/login.php');
-};
+
 $newMessages = null;
 $messages = Message::loadUnreadMessagesByReceiverId($connection, $_SESSION['id']);
 if (count($messages)>0) {
@@ -30,7 +26,7 @@ if (count($messages)>0) {
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" style="margin-top:30px;">
                 <a class="btn btn-warning" href="index.php?menu=index" role="button">Strona główna</a>
                 <a class="btn btn-info" href="index.php?menu=users" role="button">Użytkownicy</a>
-                <a class="btn btn-info" href="index.php?menu=messages" role="button">Wiadomości<?php echo $newMessages;?></a>
+                <a class="btn btn-info" href="index.php?menu=messages&type=received" role="button">Wiadomości<?php echo $newMessages;?></a>
                 <a class="btn btn-info" href="index.php?menu=myProfile" role="button">Profil</a>
                 <a class="btn btn-info" href="admin/logout.php" role="button">Wyloguj się</a>
             </div>

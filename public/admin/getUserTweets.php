@@ -2,7 +2,8 @@
 
 include_once __DIR__ . '/../bootstrap.php';
 $allUsers = User::loadAllUser($connection);
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
+usort($allUsers,'ascUsernameSorter');
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id']) && !empty($_POST['id'])) {
     $user = User::loadUserById($connection, $_POST['id']);
     $username = $user->getUsername();
     $tweets = Tweet::showAllTweetsByUserId($connection, $_POST['id']);
@@ -35,6 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
         };
     };
     die;
+} elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id']) && empty($_POST['id'])){
+    echo '<b>Zly input!</b>';
 }
 ?>
 
@@ -44,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
 <form method="post" action="">
     <select name="id">
         <?php
+        echo "<option value=''>- -</option>";
         for ($i = 0; $i < count($allUsers); $i++) {
             $user = $allUsers[$i]->getUsername();
             $id = $allUsers[$i]->getId();

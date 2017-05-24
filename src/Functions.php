@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mateusz
- * Date: 19.05.17
- * Time: 09:45
- */
 function descCreationDateSorter($a, $b)
 {
     return strcmp($b->getCreationDate(),$a->getCreationDate());
@@ -12,4 +6,8 @@ function descCreationDateSorter($a, $b)
 function ascCreationDateSorter($a, $b)
 {
     return strcmp($a->getCreationDate(),$b->getCreationDate());
+}
+function ascUsernameSorter($a, $b){
+    return strcmp($a->getUsername(),$b->getUsername());
+
 }
