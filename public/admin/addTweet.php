@@ -2,12 +2,14 @@
 
 include_once __DIR__ . '/../bootstrap.php';
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['tweetText'])) {
- $newTweet = new Tweet();
- $newTweet->setUserId($_SESSION['id']);
- $newTweet->setText($_POST['tweetText']);
- $newTweet->setCreationDate(date("Y-m-d H:i:s"));
- $newTweet->save($connection);
- echo 'Twój tweet został dodany';
+    $tweetText = $_POST['tweetText'];
+    $tweetText = swearChecker($tweetText);
+    $newTweet = new Tweet();
+    $newTweet->setUserId($_SESSION['id']);
+    $newTweet->setText($tweetText);
+    $newTweet->setCreationDate(date("Y-m-d H:i:s"));
+    $newTweet->save($connection);
+    echo 'Twój tweet został dodany';
 }
 ?>
 

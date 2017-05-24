@@ -3,9 +3,11 @@
 include_once __DIR__ . '/../bootstrap.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['tweetId']) && isset($_POST['commentText']) && $_POST['tweetId'] == $tweetId) {
+    $commentText = $_POST['commentText'];
+    $commentText = swearChecker($commentText);
     $newComment = new Comment();
     $newComment->setTweetId($_POST['tweetId']);
-    $newComment->setText($_POST['commentText']);
+    $newComment->setText($commentText);
     $newComment->setCreationDate(date("Y-m-d H:i:s"));
     $newComment->setUserId($_SESSION['id']);
     $newComment->save($connection);
