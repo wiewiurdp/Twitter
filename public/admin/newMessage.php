@@ -3,6 +3,7 @@
 include_once __DIR__ . '/../bootstrap.php';
 
 $allUsers = User::loadAllUser($connection);
+usort($allUsers, 'ascUsernameSorter');usort($allUsers,'ascUsernameSorter');
 if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['type'])) {
 
 }
@@ -23,19 +24,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageText'])) {
 <html>
 <body>
 <h1><?php
-    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageId'])){
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageId'])) {
         echo 'Odpowiedz na wiadomość';
     } else {
         echo 'Napisz wiadomość';
     }
     ?>
-    </h1>
+</h1>
 <form method="post">
     Do: <br>
     <select name="receiverId">
         <?php
         if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageId'])) {
-            $message = Message::loadMessageById($connection,$_POST['messageId']);
+            $message = Message::loadMessageById($connection, $_POST['messageId']);
             $senderId = $message->getSenderId();
             $topic = $message->getTopic();
             $text = $message->getText();
@@ -53,14 +54,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageText'])) {
     </select>
     <br>
     Temat: <input name="topic" value="<?php
-    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageId'])){
-        echo "Re: ".$topic;
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageId'])) {
+        echo "Re: " . $topic;
     }
     ?>
 ">
     <br>
     <br><textarea name="messageText" cols="60" rows="5"><?php
-        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageId'])){
+        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageId'])) {
             echo $text;
         }
         ?></textarea>

@@ -1,5 +1,6 @@
 <?php
 // public/admin/addUser.php
+$loginCheck = 1;
 include_once __DIR__ . '/../bootstrap.php';
 if (!($_SERVER["REQUEST_METHOD"] === "POST")) {
 
