@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id']) && !empty($_POS
         $tweetId = $tweets[$i]->getId();
         $tweetText = $tweets[$i]->getText();
         $tweetCreationDate = $tweets[$i]->getCreationDate();
-        echo "<b><h2><a href='/KRA_PHP_W_02_Podstawy_Programowania/Warsztaty2/public/index.php?menu=tweet&tweetId=" . $tweetId . "'></b><br>" . $tweetText . "</a><br></h2><code>Data dodania:" . $tweetCreationDate . "</code>";
+        echo "<b><h2><a href='../public/index.php?menu=tweet&tweetId=" . $tweetId . "'></b><br>" . $tweetText . "</a><br></h2><code>Data dodania:" . $tweetCreationDate . "</code>";
 
         $tweetId = $tweets[$i]->getId();
         $comments = Comment::loadAllCommentsByTweetId($connection, $tweetId);
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id']) && !empty($_POS
                 $commentText = $comments[$j]->getText();
                 $commentCreationDate = $comments[$j]->getCreationDate();
 //                echo "<br><br><b>" . $commentUsername . "</b><br>" . $commentText . "<br>Data dodania:" . $commentCreationDate . "</code><br>";
-                echo "<br><br><b>" . $commentUsername . "<a href='/KRA_PHP_W_02_Podstawy_Programowania/Warsztaty2/public/index.php?menu=comment&commentId=" . $commentId . "'></b><br>" . $commentText . "</a><br><code>Data dodania:" . $commentCreationDate . "</code>";
+                echo "<br><br><b>" . $commentUsername . "<a href='../public/index.php?menu=comment&commentId=" . $commentId . "'></b><br>" . $commentText . "</a><br><code>Data dodania:" . $commentCreationDate . "</code>";
 
             };
         };

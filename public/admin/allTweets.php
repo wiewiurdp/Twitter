@@ -13,7 +13,7 @@ for ($i = 0; $i < count($tweets); $i++) {
     $tweetText = $tweets[$i]->getText();
     $tweetCreationDate = $tweets[$i]->getCreationDate();
     $tweetId = $tweets[$i]->getId();
-    echo "<b><h2>". $tweetUsername ."<a href='/KRA_PHP_W_02_Podstawy_Programowania/Warsztaty2/public/index.php?menu=tweet&tweetId=".$tweetId."'></b><br>" . $tweetText . "</a><br></h2><code>Data dodania:" . $tweetCreationDate . "</code>";
+    echo "<b><h2>". $tweetUsername ."<a href='../public/index.php?menu=tweet&tweetId=".$tweetId."'></b><br>" . $tweetText . "</a><br></h2><code>Data dodania:" . $tweetCreationDate . "</code>";
 
 
 
@@ -29,7 +29,7 @@ for ($i = 0; $i < count($tweets); $i++) {
             $commentText = $comments[$j]->getText();
             $commentCreationDate = $comments[$j]->getCreationDate();
             $commentId = $comments[$j]->getId();
-            echo "<br><br><b>" . $commentUsername . "<a href='/KRA_PHP_W_02_Podstawy_Programowania/Warsztaty2/public/index.php?menu=comment&commentId=".$commentId."'></b><br>" . $commentText . "</a><br><code>Data dodania:" . $commentCreationDate . "</code>";
+            echo "<br><br><b>" . $commentUsername . "<a href='../public/index.php?menu=comment&commentId=".$commentId."'></b><br>" . $commentText . "</a><br><code>Data dodania:" . $commentCreationDate . "</code>";
         };
     };
     include 'addComment.php';

@@ -1,12 +1,8 @@
 <?php
 
 include_once __DIR__ . '/../bootstrap.php';
-
 $allUsers = User::loadAllUser($connection);
-usort($allUsers, 'ascUsernameSorter');usort($allUsers,'ascUsernameSorter');
-if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['type'])) {
-
-}
+usort($allUsers, 'ascUsernameSorter');
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageText'])) {
     $newMessage = new Message();
@@ -31,7 +27,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageText'])) {
     }
     ?>
 </h1>
-<form method="post">
+<form method="post" <?php
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['messageId'])) {
+    echo "action='../public/index.php?menu=messages&type=new'";
+}
+?>
+>
     Do: <br>
     <select name="receiverId">
         <?php

@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['reg'])){
     <br>
     <button type="submit">Loguj</button>
     <br>
-       <a href="/KRA_PHP_W_02_Podstawy_Programowania/Warsztaty2/public/admin/addUser.php">Rejejestracja</a>
+       <a href="../../public/admin/addUser.php">Rejejestracja</a>
 </form>
 </body>
 </html>

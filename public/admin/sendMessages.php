@@ -13,6 +13,6 @@ for ($i = 0; $i < count($sendMessages); $i++) {
     $text = $sendMessages[$i]->getText();
     $messageId = $sendMessages[$i]->getId();
     $creationDate = $sendMessages[$i]->getCreationDate();
-    echo(sprintf('<a href="/KRA_PHP_W_02_Podstawy_Programowania/Warsztaty2/public/index.php?menu=messages&messageId=%d"><b>Odbiorca:</b> %s <b>Temat:</b> %s <b>Otrzymane: </b>%s<br></a>', $messageId, $username, $topic, $creationDate));
+    echo(sprintf('<a href="../public/index.php?menu=messages&messageId=%d"><b>Odbiorca:</b> %s <b>Temat:</b> %s <b>Otrzymane: </b>%s<br></a>', $messageId, $username, $topic, $creationDate));
 
 }

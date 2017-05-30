@@ -1,7 +1,6 @@
 <?php
 include_once 'bootstrap.php';
 
-
 $newMessages = null;
 $messages = Message::loadUnreadMessagesByReceiverId($connection, $_SESSION['id']);
 if (count($messages)>0) {
