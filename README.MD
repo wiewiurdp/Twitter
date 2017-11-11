@@ -1,3 +1,1 @@
-## Ładowanie bazy
-
-``mysql -uUŻYTKOWNIK -p NAZWA_BAZY < data/db.sql``
+Twitter-like site with simple fron-end
