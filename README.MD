@@ -1,1 +1,1 @@
-Twitter-like site with simple fron-end
+Twitter-like site with simple front-end
